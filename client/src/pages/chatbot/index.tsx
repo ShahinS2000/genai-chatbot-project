@@ -33,6 +33,17 @@ export default function Test() {
     return null;
   };
 
+  const handleSendMessage = (message) => {
+    // Simple responses to messages
+    if (message.toLowerCase() === "hello") {
+      setResult("Hi There!, ask me a question regarding your dataset!");
+    } else if (message.toLowerCase() === "bye") {
+      setResult("See ya!");
+    } else if (message.toLowerCase() === "how are you?") {
+      setResult("Im doing well thanks");
+    }
+  };
+
   // Function to check if the query is asking for count or number
   const isCountQuery = (query) => {
     console.log(query.question);
@@ -60,55 +71,68 @@ export default function Test() {
     const something = extractSomething(question);
     console.log(something);
 
-    fetch("http://127.0.0.1:5000/predict", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        let res = JSON.parse(JSON.stringify(data.result));
-        res = JSON.parse(res);
-        console.log(res);
+    if (question.toLowerCase() === "hello") {
+      setResult("Hi There!, ask me a question regarding your dataset!");
+      setLoadingQuery(false);
+    } else if (question.toLowerCase() === "bye") {
+      setResult("See ya!");
+      setLoadingQuery(false);
+    } else if (/how\s+are\s+you\??/i.test(question)) {
+      setResult("Im doing well thanks");
+      setLoadingQuery(false);
+    } else {
+      fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          let res = JSON.parse(JSON.stringify(data.result));
+          res = JSON.parse(res);
+          console.log(res);
 
-        if (isCount) {
-          setResult(res[0]["COUNT(*)"]);
-          setRows([])
-          setColumns([])
-        } else {
-          // grid result
-          const columnData = Object.keys(res[0]).map((key) => ({
-            key: key,
-            name: key,
-            resizable: true,
-            sortable: true,
-          }));
+          if (isCount) {
+            setResult(res[0]["COUNT(*)"]);
+            setRows([]);
+            setColumns([]);
+          } else {
+            // grid result
+            const columnData = Object.keys(res[0]).map((key) => ({
+              key: key,
+              name: key,
+              resizable: true,
+              sortable: true,
+            }));
 
-          setColumns(columnData);
-          setRows(res);
-          setResult()
+            setColumns(columnData);
+            setRows(res);
+            setResult();
 
-          console.log("Rows", rows);
+            console.log("Rows", rows);
 
-          // View column data
-          console.log("Columns", columnData);
+            // View column data
+            console.log("Columns", columnData);
 
-          //setResult(res);
-        }
+            //setResult(res);
+          }
 
-        /*
+          /*
         let trimmedString = res.replace(/^\[|\]$/g, "");
         console.log(JSON.parse(JSON.stringify(trimmedString)));
         console.log(JSON.parse(trimmedString)["COUNT(*)"]);
         */
 
-        // need one for tables now
-        //setResult(JSON.parse(trimmedString)["COUNT(*)"]);
+          // need one for tables now
+          //setResult(JSON.parse(trimmedString)["COUNT(*)"]);
 
-        setLoadingQuery(false);
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+          setLoadingQuery(false);
+        })
+        .catch((error) => {
+          console.error("Error", error);
+          setResult("I'm not sure I understand!")
+          setLoadingQuery(false);
+        });
+    }
   };
 
   return (
@@ -144,14 +168,13 @@ export default function Test() {
         <p className="text-gray-700 font-bold">Loading response...</p>
       )}
       {result && !loadingQuery && (
-        <p className="text-gray-700 font-bold">Result: {result}</p>
+        <p className="text-gray-700 font-bold">{result}</p>
       )}
       <div>
-        { !loadingQuery && rows.length > 0 && columns.length > 0 && (
-          <DataGrid columns={columns} rows={rows} className="rdg-light"/>
+        {!loadingQuery && rows.length > 0 && columns.length > 0 && (
+          <DataGrid columns={columns} rows={rows} className="rdg-light" />
         )}
       </div>
-
     </div>
   );
 }
