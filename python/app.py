@@ -25,13 +25,14 @@ CORS(app)
 openai_key = os.getenv("OPENAI_API_KEY")
 openai_base = os.getenv("OPENAI_API_BASE")
 openai_version = os.getenv("OPENAI_API_VERSION")
+deploy_name = os.getenv("DEPLOYMENT_NAME")
 
 @app.route('/predict', methods=['POST'])
 def predict():
     
     file = "./data/ml_project1_data.csv"
 
-    llm = AzureChatOpenAI(openai_api_key=openai_key, deployment_name="investengmodel", model_name="gpt-4", verbose=False, cache=False, temperature=0.2, openai_api_base=openai_base, openai_api_version= openai_version)
+    llm = AzureChatOpenAI(openai_api_key=openai_key, deployment_name=deploy_name, model_name="gpt-4", verbose=False, cache=False, temperature=0.2, openai_api_base=openai_base, openai_api_version= openai_version)
 
     #agent = create_csv_agent(llm, file, verbose=True)
 

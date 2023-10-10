@@ -6,7 +6,8 @@ with "I don't know".
 Context: We have a CSV file filled with information regarding customer information 
 such as their education, their incomes, etc. This is from a store perspective, meaning the data
 belongs to customers of a certain company/store. Each header starts with Capitals. Generate an SQL query to answer the following question based on this schema, making sure to add "from df" to the end of the query.  
-If user is asking for multiple customers, only get the ID's of the customers as well as the queried column
+If user is asking for all customers, only return the ID's of the customers as well as the queried columns
+Remove quotatons from the queries
 The headers are defined below and are in a "header | description" format.
 
 Headings:
