@@ -10,7 +10,7 @@ The result of the queries are displayed on the frontend, which I used NextJS to 
 
 Instructions:
 1. Set up a Python enviornment and install all required libraries by performing  "pip install -r requirements.txt" in the backend directory
-2. Ensure that the details of the model are defined in the .env 
+2. Ensure that the details of the model are defined in the .env (within the backend folder)
 3. Run the backend by running "python app.py"
 4. Then once it's running, open up a separate terminal and head over to the backend directory
 5. Run "npm i" to install all required node modules
